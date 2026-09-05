@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = "https://script.google.com/u/0/home/projects/1UEorkkL8BL8j5D7xxPTzPPQ1Mud8QRU6sbxCiSp-UDYYkKU2UdlqEZUP";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBI6jaZ9DrEjPssE-L10fBaOStNvzuWM9c4krezfkLoZrRx-sMxVSK_-dL3bKAEBSB/exec";
 const BOOKING_WINDOW_DAYS = 60; // mirrors BOOKINGWINDOW in the Config sheet until an /action=bounds endpoint exists
 
 const params = new URLSearchParams(window.location.search);
