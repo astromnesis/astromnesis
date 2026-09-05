@@ -436,3 +436,12 @@ body {
     .contact-detail { margin-bottom: 3px; }
 }
 
+
+.booking-card { height: auto; min-height: 350px; }
+.booking-step { margin-top: 15px; }
+.booking-step[hidden] { display: none; }
+.booking-label { display: block; color: #ffffff; font-size: 12px; margin-bottom: 6px; }
+.booking-date-input { background: transparent; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 10px; font-size: 12px; }
+.slots-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.slot-button { width: auto; padding: 6px 12px; font-size: 11px; }
+.booking-status { margin-top: 12px; color: #e085a3; font-size: 12px; text-align: center; }
