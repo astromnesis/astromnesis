@@ -49,17 +49,27 @@
     <main>
         <div class="content-container">
             <div class="single-card-container">
-                <div class="service-card">
-                    <h2 class="service-title">Book a Reading</h2>
+                <div class="service-card booking-card">
+                    <h2 class="service-title" id="bookingTitle">Book a Reading</h2>
                     <div class="service-text">
-                        Ready to uncover what the stars and cards have in store for you? Booking a reading is simple and straightforward.
-                        <br><br>
-                        To schedule your session, please reach out via email or phone with your preferred reading type and available dates. I'll get back to you promptly to confirm your appointment.
-                        <br><br>
-                        <strong>What to expect:</strong><br>
-                        Each session is personalized to your needs. Whether you choose a video call or an in-person meeting in Porto, you'll receive guidance and clarity in a warm, welcoming space.
+                        Ready to uncover what the stars and cards have in store for you? Choose your session length below to see available times.
                     </div>
-                    <a href="contact.html" class="service-button">Contact me to book</a>
+
+                    <div id="durationStep" class="booking-step">
+                        <button class="service-button" type="button" data-duration="30">30 minutes</button>
+                        <button class="service-button" type="button" data-duration="60">1 hour</button>
+                    </div>
+
+                    <div id="dateStep" class="booking-step" hidden>
+                        <label class="booking-label" for="bookingDate">Choose a date</label>
+                        <input class="booking-date-input" type="date" id="bookingDate">
+                    </div>
+
+                    <div id="slotsStep" class="booking-step" hidden>
+                        <div id="slotsList" class="slots-list"></div>
+                    </div>
+
+                    <div id="bookingStatus" class="booking-status"></div>
                 </div>
             </div>
         </div>
@@ -74,5 +84,6 @@
     </footer>
 
     <script src="../js/main.js"></script>
+    <script src="../js/booking.js"></script>
 </body>
 </html>
