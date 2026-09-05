@@ -445,3 +445,6 @@ body {
 .slots-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .slot-button { width: auto; padding: 6px 12px; font-size: 11px; }
 .booking-status { margin-top: 12px; color: #e085a3; font-size: 12px; text-align: center; }
+
+.booking-text-input { display: block; width: 100%; max-width: 220px; margin: 0 auto 10px auto; background: transparent; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 10px; font-size: 12px; }
+#confirmBookingButton { display: block; margin: 8px auto 0 auto; }

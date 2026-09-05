@@ -1,9 +1,71 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBI6jaZ9DrEjPssE-L10fBaOStNvzuWM9c4krezfkLoZrRx-sMxVSK_-dL3bKAEBSB/exec";
-const BOOKING_WINDOW_DAYS = 60; // mirrors BOOKINGWINDOW in the Config sheet until an /action=bounds endpoint exists
+const BOOKING_WINDOW_DAYS = 60; // mirrors BOOKINGWINDOW
+const OUR_EMAIL = 'astromnesis@gmail.com';
 
 const params = new URLSearchParams(window.location.search);
 const service = params.get('service') || 'astrology';
 let selectedDuration = null;
+
+function sendConfirmationEmails_(booking, conflict) {
+  const wifeSubject = conflict
+    ? `Conflict flagged — ${booking.date} ${booking.start}`
+    : `New booking — ${booking.date} ${booking.start}`;
+  const wifeBody = conflict
+    ? `A double-booking was detected for ${booking.date} ${booking.start}-${booking.end} (${booking.service}, ${booking.duration}min).\nClient: ${booking.name} (${booking.email}).\nPlease check the sheet and resolve manually.`
+    : `New confirmed booking:\n${booking.date} ${booking.start}-${booking.end}\nService: ${booking.service} (${booking.duration}min)\nClient: ${booking.name} (${booking.email})`;
+
+  MailApp.sendEmail(WIFE_EMAIL, wifeSubject, wifeBody);
+  MailApp.sendEmail(
+    booking.email,
+    'Your astromnesis reading is confirmed',
+    `Hi ${booking.name},\n\nYour ${booking.service} reading (${booking.duration} min) is confirmed for ${booking.date} at ${booking.start}.\n\nSee you then!\nastromnesis`
+  );
+}
+
+function finalizeBooking(booking) {
+  const sheet = getSheet_();
+  const config = readConfig();
+  const rows = getBookingRows_(sheet);
+  const headerRow = findRow_(sheet, 'ClientName');
+
+  const conflict = rows.some(row =>
+    row.HoldKey !== booking.holdKey &&
+    !row.PendingUntil &&
+    !(row.Notes && String(row.Notes).toLowerCase().includes('cancelled')) &&
+    normalizeDate_(row.Date, config.timezone) === booking.date &&
+    timeToMinutes_(row.Start, config.timezone) < timeToMinutes_(booking.end, config.timezone) &&
+    timeToMinutes_(row.End, config.timezone) > timeToMinutes_(booking.start, config.timezone)
+  );
+
+  const matchIndex = rows.findIndex(row => row.HoldKey === booking.holdKey);
+
+  if (matchIndex === -1) {
+    // Hold row is gone (expired, or overwritten) — payment already succeeded, so write it anyway
+    appendBookingRow_(sheet, {
+      ClientName: booking.name,
+      Date: booking.date,
+      Service: booking.service,
+      Duration: booking.duration,
+      Start: booking.start,
+      End: booking.end,
+      Email: booking.email,
+      Booking: new Date(),
+      HoldKey: booking.holdKey,
+      PendingUntil: '',
+      Notes: conflict ? 'CONFLICT - hold missing, verify manually' : '',
+    });
+  } else {
+    const headers = sheet.getRange(headerRow, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const sheetRow = headerRow + 1 + matchIndex;
+    sheet.getRange(sheetRow, headers.indexOf('PendingUntil') + 1).setValue('');
+    if (conflict) {
+      sheet.getRange(sheetRow, headers.indexOf('Notes') + 1).setValue('CONFLICT - double booked, verify manually');
+    }
+  }
+
+  sendConfirmationEmails_(booking, conflict);
+  return { status: 'confirmed', conflict: conflict };
+}
 
 function initBookingTitle_() {
   const title = document.getElementById('bookingTitle');
