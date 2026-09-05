@@ -1,7 +1,6 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBI6jaZ9DrEjPssE-L10fBaOStNvzuWM9c4krezfkLoZrRx-sMxVSK_-dL3bKAEBSB/exec";
-const BOOKING_WINDOW_DAYS = 60; // mirrors BOOKINGWINDOW
-const OUR_EMAIL = 'astromnesis@gmail.com';
-
+const BOOKING_WINDOW_DAYS = 60; // mirrors BOOKINGWINDOW in the Config sheet until an /action=bounds endpoint exists
+ 
 const params = new URLSearchParams(window.location.search);
 const service = params.get('service') || 'astrology';
 let selectedDuration = null;
@@ -143,3 +142,4 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('bookingDate').addEventListener('change', e => onDateChosen_(e.target.value));
   document.getElementById('confirmBookingButton').addEventListener('click', confirmBooking_);
 });
+ 
